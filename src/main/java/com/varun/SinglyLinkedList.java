@@ -1,8 +1,8 @@
 package com.varun;
 
 class Node<T>{
-    T data;
-    Node<T> next;
+    public T data;
+    public Node<T> next;
 
 
     public Node(T data){
@@ -31,7 +31,7 @@ public class SinglyLinkedList<T>{
         Node<T> n = new Node<>(data);
 
         if(head != null){
-            // insert before head;
+            // insert before next;
             n.next = head;
             head = n;
         }else{
@@ -55,7 +55,7 @@ public class SinglyLinkedList<T>{
             // Old Way
 
             // traverse till the end node of the list
-            Node<T> temp = head;
+            Node<T> temp = next;
             while(temp.next != null){
                 temp = temp.next;
             }
@@ -80,7 +80,7 @@ public class SinglyLinkedList<T>{
             return;
         }
 
-        if(index == size){
+        if(index == size - 1){
             insertAtTail(data);
             return;
         }
@@ -108,7 +108,7 @@ public class SinglyLinkedList<T>{
         // first
         if(index == 0){
             if(head == null){
-                throw new NullPointerException("head is empty");
+                throw new NullPointerException("next is empty");
             }
 
             if(head.next == null){
@@ -121,7 +121,7 @@ public class SinglyLinkedList<T>{
             return;
         }
         // last
-        if(index == size){
+        if(index == size - 1){
             // There's no way to go back to prev node, so this remains O(n)
 
             Node<T> temp = head;
@@ -153,7 +153,7 @@ public class SinglyLinkedList<T>{
         }
 
         if(head == null){
-            throw new NullPointerException("head is null");
+            throw new NullPointerException("next is null");
         }
 
 
@@ -163,7 +163,7 @@ public class SinglyLinkedList<T>{
         else if(index == 1){
             return head.next.data;
         }
-        else if(index == size){
+        else if(index ==  size - 1){
             return tail.data;
         }
 

@@ -1,4 +1,10 @@
 package com.varun;
 
-public class LRU_Cache {
-}
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+
+
+
+public class LRU_CacheTest {}
