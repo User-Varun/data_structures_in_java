@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class QueueUsingArrayTest {
-    QueueUsingArray q1;
+public class CircularQueueUsingArrayTest {
+    CircularQueueUsingArray q1;
 
     @BeforeEach
     public void setUp(){
-        q1 = new QueueUsingArray(3);
+        q1 = new CircularQueueUsingArray(3);
     }
 
 

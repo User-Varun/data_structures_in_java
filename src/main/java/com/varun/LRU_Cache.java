@@ -7,15 +7,15 @@ import java.util.HashMap;
 // 1.HashMap from java ( will implement my own HashMap later )
 // 2.Doubly Linked List ( my homemade )
 
-class LRU_Node<T>{
+class LRU_Node<K, V>{
 
-    LRU_Node<T> next;
-    LRU_Node<T> prev;
-    T data;
-    int key;
+    LRU_Node<K, V> next;
+    LRU_Node<K, V> prev;
+    V data;
+    K key;
 
 
-    public LRU_Node(int key, T data){
+    public LRU_Node(K key , V data ){
         this.next = null;
         this.prev = null;
         this.data = data;
@@ -23,12 +23,12 @@ class LRU_Node<T>{
     }
 }
 
-public class LRU_Cache<T>{
+public class LRU_Cache<K , V>{
 
-    HashMap<Integer , LRU_Node<T>> map;
+    HashMap<K , LRU_Node<K , V>> map;
 
-    private LRU_Node<T> head;
-    private LRU_Node<T> tail;
+    private LRU_Node<K, V> head;
+    private LRU_Node<K, V> tail;
     final int capacity;
     int nodeCount;
 
@@ -40,56 +40,105 @@ public class LRU_Cache<T>{
     }
 
     // step-1
-    public void put(int key , T data){
+    public void put(K key , V data){
 
-        LRU_Node<T> node = new LRU_Node<>(key, data);
+        LRU_Node<K, V> node = new LRU_Node<>(key , data);
+
+
+        if(map.containsKey(key)){
+            LRU_Node<K , V> existingNode = map.get(key);
+            existingNode.data = data;
+           addToHead(node);
+           return;
+        }
+
 
         if(nodeCount < capacity){
         map.put(key , node);
+        addToHead(node);
         nodeCount++;
+        System.out.println("put success!");
         return;
         }
 
         if(nodeCount == capacity){
-            // delete last el + insert the el at front
+            // remove the tail node ( slide the tail pointer and remove connections from last node, garbage collection will delete the node)
             removeTail();
-            addToHead(head , node);
+            nodeCount--;
 
+            // add the new object to the head;
+            map.put(key , node);
+            addToHead(node);
+            nodeCount++;
         }
 
     }
-    public T get(int key){
+    public V get(K key){
 
-        LRU_Node<T> res = map.get(key);
+        LRU_Node<K , V> node = map.get(key);
 
-        return res.data;
+        // means cache miss
+        if (node == null) {
+            return null;
+        }
+        moveToHead(node);
+        return node.data;
     }
 
 
     // Helper Methods;
-    private void addToHead(LRU_Node<T> head , LRU_Node<T> n){
+    private void addToHead(LRU_Node<K, V> n){
 
         // condition 1 :- head is empty
         if(head == null){
             head  = n;
             tail = head;
-            return;
-        }
-        // condition 2 :- head.next == empty
-        if(head.next == null){
-            n.next = head;
-            tail.prev = n;
-            head = n;
-            return;
-        }
 
-        // condition 3 :- there are more than 2 elements
-        n.next = head;
-        head = n;
+        }else{
+            n.next = head;
+            head.prev = n;
+            head = n;
+        }
 
     }
-    private void moveToHead(){}
-    private void removeNode(){}
-    private void removeTail(){}
+    private void removeTail(){
+          if(head == tail){
+              // there's only one element
+              map.remove(tail.key);
+              head = null;
+              tail = null;
 
+          }else{
+              LRU_Node<K , V> temp = tail;
+              map.remove(tail.key);
+              tail = tail.prev;
+              tail.next = null;
+          }
+
+    }
+    private void moveToHead(LRU_Node<K , V> node){
+
+        if(node == head){
+            return;
+        }
+        removeNode(node);
+        addToHead(node);
+    }
+    private void removeNode(LRU_Node<K , V> node){
+
+        // base case
+        if(node == head){
+            head = head.next;
+            head.prev.next = null;
+            head.prev = null;
+            return;
+        }
+        if(node == tail){
+            removeTail();
+            return;
+        }
+        // here there will be atleast 3 nodes or more ( so rewriting pointers)
+        node.prev.next  = node.next;
+        node.next.prev = node.prev;
+    }
 }

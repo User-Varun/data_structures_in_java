@@ -1,18 +1,18 @@
 package com.varun;
 
-public class QueueUsingArray {
+public class CircularQueueUsingArray {
     int front;
     int rear;
     int capacity;
     int size;
     String[] arr;
 
-    public QueueUsingArray(int capcity) {
+    public CircularQueueUsingArray(int capacity) {
         this.front = 0;
         this.rear = -1;
-        this.capacity = capcity;
+        this.capacity = capacity;
         this.size = 0;
-        this.arr = new String[capcity];
+        this.arr = new String[capacity];
     }
 
 
